@@ -40,7 +40,7 @@ jobs:
         ./scripts/feeds install -a
 
     - name: Prepare Release Zip File
-      id: assemble_artifact
+      id: assemble_artifact_test
       run: |
         cd "/home/runner"
         ls
