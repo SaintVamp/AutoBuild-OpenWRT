@@ -42,7 +42,7 @@ jobs:
     - name: Prepare Release Zip File
       id: assemble_artifact_test
       run: |
-        cd "/home/runner"
+        cd "/home/runner/openwrt"
         ls
         zip OpenWrt-R2S.zip feeds.conf.default COPYING
         release_test="R2S-$(date +%Y-%m-%d)"
