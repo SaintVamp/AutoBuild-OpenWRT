@@ -29,6 +29,7 @@ jobs:
     - name: Server Benchmark
       run: |
         wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
+
     - name: Clone Source
       run: |
         cd "/home/runner"
@@ -37,6 +38,16 @@ jobs:
         cd "/home/runner/openwrt"
         ./scripts/feeds update -a
         ./scripts/feeds install -a
+
+    - name: Prepare Release Zip File
+      id: assemble_artifact
+      run: |
+        cd "/home/runner"
+        ls
+        zip OpenWrt-R2S.zip feeds.conf.default COPYING
+        release_test="R2S-$(date +%Y-%m-%d)"
+        echo "##[set-output name=release_test;]release_test"
+
     - name: Build OpenWrt
       run: |
         cd "/home/runner/openwrt"
@@ -54,6 +65,7 @@ jobs:
       id: assemble_artifact
       run: |
         cd "/home/runner"
+        ls
         zip OpenWrt-R2S.zip openwrt-sv-22.03-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz openwrt-sv-22.03-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz
         release_tag="R2S-$(date +%Y-%m-%d)"
         echo "##[set-output name=release_tag;]$release_tag"
