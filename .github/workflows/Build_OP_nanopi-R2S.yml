@@ -80,6 +80,7 @@ jobs:
       - name: Check Build Info
         id: check_build_info
         run: |
+          echo ${{ env.GITHUB_WORKSPACE }}
           cd "/home/runner/openwrt"
           ls artifact/buildinfo/
           ls artifact/package/
@@ -117,16 +118,16 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_buildinfo
-          path: ./artifact/buildinfo/
+          path: ${{ env.GITHUB_WORKSPACE }}/artifact/buildinfo/
 
       - name: Upload package
         uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_package
-          path: ./artifact/package/
+          path: ${{ env.GITHUB_WORKSPACE }}/artifact/package/
 
       - name: Upload firmware
         uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_firmware
-          path: ./bin/targets/
+          path: ${{ env.GITHUB_WORKSPACE }}/bin/targets/
