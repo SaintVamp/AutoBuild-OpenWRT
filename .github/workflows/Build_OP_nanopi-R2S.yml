@@ -59,7 +59,7 @@ jobs:
       run: |
         cd "/home/runner"
         ls
-        zip OpenWrt-R2S.zip openwrt-sv-22.03-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz openwrt-sv-22.03-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz
+        zip OpenWrt-R2S.zip ${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz ${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz
         release_tag="R2S-$(date +%Y-%m-%d)"
 
     - name: Set output
