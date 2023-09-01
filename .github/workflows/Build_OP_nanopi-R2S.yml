@@ -50,14 +50,17 @@ jobs:
 
       - name: check packages
         run: |
-          cd "/home/runner/openwrt/bin/packages"
-          cd "/home/runner/openwrt/bin/targets"
+          cd "/home/runner/openwrt"
+          ls bin/packages
+          echo "----------------------------------"
+          ls bin/targets
+          echo "===================="
 
       - name: Moving Files
         run: |
           cd "/home/runner/openwrt"
-          mv -f "bin/targets/rockchip/armv8/openwrt-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz" "../${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz"
-          mv -f "bin/targets/rockchip/armv8/openwrt-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz" "../${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz"
+          cp -f "bin/targets/rockchip/armv8/openwrt-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz" "../${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz"
+          cp -f "bin/targets/rockchip/armv8/openwrt-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz" "../${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz"
 
       - name: Prepare Release Zip File
         id: assemble_artifact
@@ -72,16 +75,15 @@ jobs:
           rm -rf $(find ./bin/targets/ -type d -name "packages")
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+    
 
       - name: Check Build Info
         id: check_build_info
         run: |
-          cd "/home/runner/openwrt/artifact/buildinfo/"
-          ls
-          cd "/home/runner/openwrt/artifact/package/"
-          ls
-          cd "/home/runner/openwrt/bin/targets/"
-          ls
+          cd "/home/runner/openwrt"
+          ls artifact/buildinfo/
+          ls artifact/package/
+          ls bin/targets/
 
       - name: Create Release
         id: create_release
