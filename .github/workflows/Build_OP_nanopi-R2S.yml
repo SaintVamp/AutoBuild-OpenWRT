@@ -67,7 +67,6 @@ jobs:
           release_tag="R2S-$(date +%Y-%m-%d-%H-%M)"
           echo "release_tag=$release_tag" >> $GITHUB_ENV
           cd "/home/runner/openwrt"
-          ls
           mkdir -p ./artifact/package
           mkdir -p ./artifact/buildinfo
           rm -rf $(find ./bin/targets/ -type d -name "packages")
