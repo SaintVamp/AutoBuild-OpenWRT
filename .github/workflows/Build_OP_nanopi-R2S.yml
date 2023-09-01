@@ -73,6 +73,16 @@ jobs:
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
 
+      - name: Check Build Info
+        id: Check Build Info
+        run: |
+          cd "/home/runner/openwrt/artifact/buildinfo/"
+          ls
+          cd "/home/runner/openwrt/artifact/package/"
+          ls
+          cd "/home/runner/openwrt/bin/targets/"
+          ls
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
