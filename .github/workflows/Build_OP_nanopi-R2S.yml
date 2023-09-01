@@ -74,7 +74,7 @@ jobs:
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
 
       - name: Check Build Info
-        id: Check Build Info
+        id: check_build_info
         run: |
           cd "/home/runner/openwrt/artifact/buildinfo/"
           ls
