@@ -26,18 +26,7 @@ jobs:
         sudo -E apt-get clean -y
         sudo -E swapoff -a
         sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile
-
-    - name: test1
-      id: test1
-      run: |
-          release_tag="R2S-$(date +%Y-%m-%d)"
-          echo "release_tag=$release_tag" >> $GITHUB_ENV
           
-    - name: test2
-      id: test2
-      run: |
-          cat ${{ env.release_tag }}
-
     - name: Server Benchmark
       run: |
         wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
@@ -59,6 +48,15 @@ jobs:
         make defconfig
         make -j$[$(nproc)+1] 
 
+    - name: check packages
+      run: |
+        cd "/home/runner/openwrt/bin/packages"
+        ls 
+        echo "------------------"
+        cd "/home/runner/openwrt/bin/targets"
+        ls 
+        echo "=================="
+
     - name: Moving Files
       run: |
         cd "/home/runner/openwrt"
@@ -73,11 +71,8 @@ jobs:
         cd "/home/runner"
         ls
         zip OpenWrt-R2S.zip ${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz ${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz
-        release_tag="R2S-$(date +%Y-%m-%d)"
-
-    - name: Set output
-      id: set_output
-      run: echo "release_tag=$release_tag" >> $GITHUB_OUTPUT
+        release_tag="R2S-$(date +%Y-%m-%d-%H-%M-%S)"
+        echo "release_tag=$release_tag" >> $GITHUB_ENV
 
     - name: Create Release
       id: create_release
@@ -85,8 +80,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.assemble_artifact.outputs.release_tag }}
-        release_name: OpenWrt ${{ steps.assemble_artifact.outputs.release_tag }}
+        tag_name: ${{ env.release_tag }}
+        release_name: OpenWrt ${{ env.release_tag }}
         draft: false
         prerelease: false
     - name: Upload Release Asset
