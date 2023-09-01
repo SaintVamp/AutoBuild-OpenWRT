@@ -26,9 +26,22 @@ jobs:
         sudo -E apt-get clean -y
         sudo -E swapoff -a
         sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile
+
+    - name: test1
+      id: test1
+      run: |
+          release_tag="R2S-$(date +%Y-%m-%d)"
+          echo "release_tag=$release_tag" >> $GITHUB_ENV
+          
+    - name: test2
+      id: test2
+      run: |
+          cat ${{ env.release_tag }}
+
     - name: Server Benchmark
       run: |
         wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
+
 
     - name: Clone Source
       run: |
