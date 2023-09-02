@@ -1,6 +1,8 @@
 name: OpenWrt_Test
 on:
-  [push]
+  push
+  schedule:
+      - cron: "*/10 * * * *"
 
 
 env:
@@ -28,7 +30,7 @@ jobs:
           sudo -E swapoff -a
           sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile
 
-#      - name: Server Benchmark
-#        run: |
-#          wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
-#
+      - name: Server Benchmark
+        run: |
+          wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
+
