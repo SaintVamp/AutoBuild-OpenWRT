@@ -16,7 +16,6 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           docker rmi $(docker images -q)
-          sudo -E apt-get remove -y --purge azure-cli ghc zulu* hhvm llvm* firefox google* dotnet* powershell mysql* php* mssql-tools msodbcsql17 android*
           sudo -E apt-get update -y
           sudo -E apt-get full-upgrade -y
           sudo -E apt-get install -y git git-core
@@ -39,6 +38,11 @@ jobs:
           sudo chown -R runner:runner "openwrt"
           release_tag="R2S-$(date +%Y-%m-%d-%H-%M)"
           echo "release_tag=$release_tag" >> $GITHUB_ENV
+
+      - name: Check Source
+        run: |
+          cd "/home/runner/openwrt/config"
+          ls
 
       - name: Release
         uses: softprops/action-gh-release@v1
