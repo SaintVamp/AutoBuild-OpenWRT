@@ -45,7 +45,6 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           tag_name: ${{ env.release_tag }}
           name: OpenWrt-${{ env.release_tag }}
