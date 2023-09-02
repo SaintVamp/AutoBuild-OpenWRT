@@ -52,3 +52,8 @@ jobs:
             *.in
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check Source
+        run: |
+          cd "/home/runner/openwrt/config"
+          ls
