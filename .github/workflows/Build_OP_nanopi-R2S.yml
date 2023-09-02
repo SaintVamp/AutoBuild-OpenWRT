@@ -108,12 +108,6 @@ jobs:
           asset_name: OpenWrt-R2S.zip
           asset_content_type: application/zip
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: OpenWrt(Download This or Go to Release Page)
-          path: /home/runner/OpenWrt-R2S.zip
-
       - name: Upload buildinfo
         uses: actions/upload-artifact@v3
         with:
