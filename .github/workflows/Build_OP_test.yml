@@ -60,7 +60,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            ${{ env.file_context }}
+            Config-build.in
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

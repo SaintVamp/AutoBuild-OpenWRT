@@ -108,6 +108,19 @@ jobs:
           asset_name: OpenWrt-R2S.zip
           asset_content_type: application/zip
 
+      - name: Release
+        uses: saintvamp/action-gh-release@v2.1
+        with:
+          tag_name: ${{ env.release_tag }}
+          name: OpenWrt-${{ env.release_tag }}
+          body_path: /home/runner/openwrt/artifact/buildinfo/
+          draft: false
+          prerelease: false
+          files: |
+            ${{ env.file_context }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload buildinfo
         uses: actions/upload-artifact@v3
         with:
