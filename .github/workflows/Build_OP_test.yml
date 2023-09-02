@@ -46,10 +46,10 @@ jobs:
         run: |
           cd "/home/runner/openwrt/config"
           file_context="$(ls *.in)"
-          echo $file_context
           echo 'file_context<<EOF' >> $GITHUB_ENV
           echo $file_context >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
+          echo $file_context
 
       - name: Release
         uses: saintvamp/action-gh-release@v2.1

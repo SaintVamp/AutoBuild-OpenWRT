@@ -1,7 +1,9 @@
 name: OpenWrt_NanoPi_R2S
 on:
-  repository_dispatch:
   workflow_dispatch:
+  push:
+    branches:
+      - master
 env:
   BRANCH_NAME: openwrt-22.03
 
@@ -44,38 +46,24 @@ jobs:
       - name: Build OpenWrt
         run: |
           cd "/home/runner/openwrt"
-          cp -f "${GITHUB_WORKSPACE}/configs/r2s.config" ".config"
+          cp -f "${GITHUB_WORKSPACE}/configs/r2s-full.config" ".config"
           make defconfig
           make -j$[$(nproc)+1] 
-
-      - name: check packages
-        run: |
-          cd "/home/runner/openwrt"
-          ls bin/packages
-          echo "----------------------------------"
-          ls bin/targets
-          echo "===================="
-
-      - name: Moving Files
-        run: |
-          cd "/home/runner/openwrt"
-          cp -f "bin/targets/rockchip/armv8/openwrt-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz" "../${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz"
-          cp -f "bin/targets/rockchip/armv8/openwrt-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz" "../${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz"
 
       - name: Prepare Release Zip File
         id: assemble_artifact
         run: |
-          cd "/home/runner"
-          zip OpenWrt-R2S.zip ${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-ext4-sysupgrade.img.gz ${BRANCH_NAME}-SV-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz
           release_tag="R2S-$(date +%Y-%m-%d-%H-%M)"
           echo "release_tag=$release_tag" >> $GITHUB_ENV
           cd "/home/runner/openwrt"
+          zip -q -0 OpenWrt-Firmware-R2S.zip ./bin/targets/rockchip/armv8/openwrt-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz
           mkdir -p ./artifact/package
           mkdir -p ./artifact/buildinfo
-          rm -rf $(find ./bin/targets/ -type d -name "packages")
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
+          cp -rf $(find ./bin/targets/ -type f -name "*.ipk") ./artifact/package/
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
-    
+          zip -q -0 -r OpenWrt-Package-SV-R2S.zip ./artifact/package/
+          zip -q -0 -r OpenWrt-BuildInfo-SV-R2S.zip ./artifact/buildinfo/
 
       - name: Check Build Info
         id: check_build_info
@@ -97,44 +85,33 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
-        id: upload-release-asset
+      - name: Upload Firmware Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/OpenWrt-R2S.zip
-          asset_name: OpenWrt-R2S.zip
+          asset_path: /home/runner/openwrt/OpenWrt-Firmware-R2S.zip
+          asset_name: OpenWrt-Firmware-R2S.zip
           asset_content_type: application/zip
 
-      - name: Release
-        uses: saintvamp/action-gh-release@v2.1
-        with:
-          tag_name: ${{ env.release_tag }}
-          name: OpenWrt-${{ env.release_tag }}
-          body_path: /home/runner/openwrt/artifact/buildinfo/
-          draft: false
-          prerelease: false
-          files: |
-            ${{ env.file_context }}
+      - name: Upload Package Asset
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload buildinfo
-        uses: actions/upload-artifact@v3
         with:
-          name: OpenWrt_buildinfo
-          path: /home/runner/openwrt/artifact/buildinfo/
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/openwrt/OpenWrt-Package-SV-R2S.zip
+          asset_name: OpenWrt-Package-SV-R2S.zip
+          asset_content_type: application/zip
 
-      - name: Upload package
-        uses: actions/upload-artifact@v3
+      - name: Upload BuildInfo Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: OpenWrt_package
-          path: /home/runner/openwrt/artifact/package/
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/openwrt/OpenWrt-BuildInfo-SV-R2S.zip
+          asset_name: OpenWrt-BuildInfo-SV-R2S.zip
+          asset_content_type: application/zip
 
-      - name: Upload firmware
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenWrt_firmware
-          path: /home/runner/openwrt/bin/targets/
