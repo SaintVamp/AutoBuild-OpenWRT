@@ -26,10 +26,10 @@ jobs:
           sudo -E swapoff -a
           sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile
 
-      - name: Server Benchmark
-        run: |
-          wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
-
+#      - name: Server Benchmark
+#        run: |
+#          wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
+#
 
       - name: Clone Source
         run: |
