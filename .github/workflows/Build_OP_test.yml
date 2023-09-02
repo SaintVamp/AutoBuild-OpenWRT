@@ -1,4 +1,4 @@
-name: OpenWrt_NanoPi_R2S
+name: OpenWrt_Test
 on:
   repository_dispatch:
   workflow_dispatch:
