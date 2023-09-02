@@ -59,8 +59,6 @@ jobs:
           body_path: /home/runner/openwrt/config/
           draft: false
           prerelease: false
-          files: |
-            Config-build.in
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
