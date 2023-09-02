@@ -45,7 +45,9 @@ jobs:
         id: check_source
         run: |
           cd "/home/runner/openwrt/config"
-          ls *.in
+          file_context="$(ls *.in)"
+          echo $file_context
+          echo "file_context=$file_context" >> $GITHUB_ENV
 
       - name: Release
         uses: saintvamp/action-gh-release@v2.1
@@ -56,7 +58,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            ${{ steps.check_source.outputs }}
+            ${{ env.file_context }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
