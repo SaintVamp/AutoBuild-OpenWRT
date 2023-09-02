@@ -1,9 +1,8 @@
 name: OpenWrt_Test
 on:
-  push
   schedule:
       - cron: "*/10 * * * *"
-
+  push:
 
 env:
   BRANCH_NAME: openwrt-22.03
