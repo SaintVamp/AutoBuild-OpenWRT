@@ -1,7 +1,7 @@
 name: OpenWrt_NanoPi_R2S
 on:
   schedule:
-    - cron: "* 17 * * *"
+    - cron: "0 17 * * *"
   workflow_dispatch:
   push:
     branches:
