@@ -47,7 +47,7 @@ jobs:
           ls
 
       - name: Release
-        uses: saintvamp/action-gh-release@v1
+        uses: saintvamp/action-gh-release@v2.1
         with:
           tag_name: ${{ env.release_tag }}
           name: OpenWrt-${{ env.release_tag }}
