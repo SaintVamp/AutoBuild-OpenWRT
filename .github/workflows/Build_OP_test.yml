@@ -56,7 +56,7 @@ jobs:
         with:
           tag_name: ${{ env.release_tag }}
           name: OpenWrt-${{ env.release_tag }}
-          body_path: /home/runner/openwrt/config/*.in
+          body_path: /home/runner/openwrt/config/Config-build.in
           draft: false
           prerelease: false
         env:
