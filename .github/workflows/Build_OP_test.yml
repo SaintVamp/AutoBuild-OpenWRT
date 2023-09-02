@@ -37,9 +37,6 @@ jobs:
           cd "/home/runner"
           git clone --branch "${BRANCH_NAME}" --single-branch "https://github.com/SaintVamp/openwrt" "openwrt"
           sudo chown -R runner:runner "openwrt"
-          cd "/home/runner/openwrt"
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
           release_tag="R2S-$(date +%Y-%m-%d-%H-%M)"
           echo "release_tag=$release_tag" >> $GITHUB_ENV
 
