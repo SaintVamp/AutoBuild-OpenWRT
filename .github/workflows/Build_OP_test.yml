@@ -32,37 +32,3 @@ jobs:
 #        run: |
 #          wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
 #
-
-      - name: Clone Source
-        run: |
-          cd "/home/runner"
-          git clone --branch "${BRANCH_NAME}" --single-branch "https://github.com/SaintVamp/openwrt" "openwrt"
-          sudo chown -R runner:runner "openwrt"
-          release_tag="R2S-$(date +%Y-%m-%d-%H-%M)"
-          echo "release_tag=$release_tag" >> $GITHUB_ENV
-
-      - name: Check Source
-        id: check_source
-        run: |
-          cd "/home/runner/openwrt/config"
-          file_context="$(ls *.in)"
-          echo 'file_context<<EOF' >> $GITHUB_ENV
-          echo $file_context >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-          echo $file_context
-
-      - name: Release
-        uses: saintvamp/action-gh-release@v2.1
-        with:
-          tag_name: ${{ env.release_tag }}
-          name: OpenWrt-${{ env.release_tag }}
-          body_path: /home/runner/openwrt/config/Config-build.in
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check Source
-        run: |
-          cd "/home/runner/openwrt/config"
-          ls
