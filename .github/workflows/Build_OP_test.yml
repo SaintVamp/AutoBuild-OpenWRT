@@ -44,15 +44,15 @@ jobs:
           echo "release_tag=$release_tag" >> $GITHUB_ENV
 
       - name: Release
-          uses: softprops/action-gh-release@v1
-          if: startsWith(github.ref, 'refs/tags/')
-          with:
-            tag_name: ${{ env.release_tag }}
-            name: OpenWrt-${{ env.release_tag }}
-            body_path: /home/runner/openwrt/config/
-            draft: false
-            prerelease: false
-            files: |
-              *.in
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          tag_name: ${{ env.release_tag }}
+          name: OpenWrt-${{ env.release_tag }}
+          body_path: /home/runner/openwrt/config/
+          draft: false
+          prerelease: false
+          files: |
+            *.in
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
