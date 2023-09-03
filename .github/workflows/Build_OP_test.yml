@@ -1,4 +1,4 @@
-name: OpenWrt_NanoPi_R2S
+name: OpenWrt_test_R2S
 on:
   schedule:
     - cron: "0 17 * * *"
