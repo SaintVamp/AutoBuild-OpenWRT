@@ -51,7 +51,7 @@ jobs:
           cd "/home/runner/openwrt"
           cp -f "${GITHUB_WORKSPACE}/configs/r2s-test.config" ".config"
           make defconfig
-          make -r -R -j1  V=sc
+          make -w -r -R -j1  V=sc
           echo "make -j$[$(nproc)+1]"
 
       - name: Prepare Release Zip File
