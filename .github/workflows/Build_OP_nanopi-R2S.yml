@@ -34,7 +34,7 @@ jobs:
 
       - name: Server Benchmark
         run: |
-          wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
+          wget -qO- --no-check-certificate https://raw.githubusercontent.com/teddysun/across/master/bench.sh | bash
 
 
       - name: Clone Source
