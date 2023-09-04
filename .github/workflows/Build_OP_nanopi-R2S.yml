@@ -51,8 +51,8 @@ jobs:
           cd "/home/runner/openwrt"
           cp -f "${GITHUB_WORKSPACE}/configs/${conf_name}" ".config"
           make defconfig
-          make -j1  V=sc
-#          make -j$[$(nproc)+1]  V=sc
+          make -j$[$(nproc)+1]  V=sc
+#          make -j1  V=sc
 
       - name: Prepare Release Zip File
         id: assemble_artifact
@@ -68,6 +68,7 @@ jobs:
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
           zip -q -0 -r OpenWrt-Package-SV-R2S.zip ./artifact/package/
           zip -q -0 -r OpenWrt-BuildInfo-SV-R2S.zip ./artifact/buildinfo/
+          ls /home/runner/openwrt
 
       - name: Check Build Info
         id: check_build_info
