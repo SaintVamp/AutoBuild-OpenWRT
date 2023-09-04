@@ -7,7 +7,7 @@ on:
     branches:
       - master
 env:
-  conf_name: r2s-full-2.config
+  conf_name: r2s-full-3.config
   BRANCH_NAME: openwrt-22.03
 
 jobs:
