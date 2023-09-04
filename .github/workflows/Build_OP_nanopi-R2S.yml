@@ -7,6 +7,7 @@ on:
     branches:
       - master
 env:
+  conf_name: r2s-full-2.config
   BRANCH_NAME: openwrt-22.03
 
 jobs:
@@ -48,7 +49,7 @@ jobs:
       - name: Build OpenWrt
         run: |
           cd "/home/runner/openwrt"
-          cp -f "${GITHUB_WORKSPACE}/configs/r2s-full.config" ".config"
+          cp -f "${GITHUB_WORKSPACE}/configs/${conf_name}" ".config"
           make defconfig
           make -j1  V=sc
 #          make -j$[$(nproc)+1]  V=sc
