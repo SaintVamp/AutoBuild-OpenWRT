@@ -47,11 +47,12 @@ jobs:
 
       - name: Build OpenWrt
         run: |
+          echo $(nproc)
           cd "/home/runner/openwrt"
           cp -f "${GITHUB_WORKSPACE}/configs/r2s-test.config" ".config"
           make defconfig
-          make -j$[$(nproc)+1]
-          echo "make -j1  V=sc"
+          make -j1  V=sc
+          echo "make -j$[$(nproc)+1]"
 
       - name: Prepare Release Zip File
         id: assemble_artifact
