@@ -57,7 +57,8 @@ jobs:
         release_tag="${version_name}-$(date +%Y-%m-%d-%H-%M)"
         echo "release_tag=$release_tag" >> $GITHUB_ENV
         cd "/home/runner/openwrt"
-        zip -q -0 OpenWrt-Firmware-SV-${version_name}.zip ./bin/targets/rockchip/armv8/*.img.gz
+        ls /bin/targets/rockchip/armv8/
+        zip -q -0 OpenWrt-Firmware-SV-${version_name}.zip ./bin/targets/
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
         cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
