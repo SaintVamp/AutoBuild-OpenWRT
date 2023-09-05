@@ -94,8 +94,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-Firmware-${version_name}.zip
-        asset_name: OpenWrt-Firmware-${version_name}.zip
+        asset_path: /home/runner/openwrt/OpenWrt-Firmware-${{version_name}}.zip
+        asset_name: OpenWrt-Firmware-${{version_name}}.zip
         asset_content_type: application/zip
 
     - name: Upload Package Asset
@@ -104,8 +104,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-Package-SV-${version_name}.zip
-        asset_name: OpenWrt-Package-SV-${version_name}.zip
+        asset_path: /home/runner/openwrt/OpenWrt-Package-SV-${{version_name}}.zip
+        asset_name: OpenWrt-Package-SV-${{version_name}}.zip
         asset_content_type: application/zip
 
     - name: Upload BuildInfo Asset
@@ -114,7 +114,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-BuildInfo-SV-${version_name}.zip
-        asset_name: OpenWrt-BuildInfo-SV-${version_name}.zip
+        asset_path: /home/runner/openwrt/OpenWrt-BuildInfo-SV-${{version_name}}.zip
+        asset_name: OpenWrt-BuildInfo-SV-${{version_name}}.zip
         asset_content_type: application/zip
 
