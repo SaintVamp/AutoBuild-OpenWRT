@@ -57,7 +57,9 @@ jobs:
         release_tag="${version_name}-$(date +%Y-%m-%d-%H-%M)"
         echo "release_tag=$release_tag" >> $GITHUB_ENV
         cd "/home/runner/openwrt"
+        echo "---------------------"
         ls
+        echo "---------------------"
         zip -q -0 OpenWrt-Firmware-SV-${version_name}.zip ./bin/targets/
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
@@ -66,16 +68,21 @@ jobs:
         cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
         zip -q -0 -r OpenWrt-Package-SV-${version_name}.zip ./artifact/package/
         zip -q -0 -r OpenWrt-BuildInfo-SV-${version_name}.zip ./artifact/buildinfo/
+        echo "---------------------"
         ls /home/runner/openwrt
+        echo "---------------------"
 
     - name: Check Build Info
       id: check_build_info
       run: |
-        echo ${{ env.GITHUB_WORKSPACE }}
+        echo ${{GITHUB_WORKSPACE}}
         cd "/home/runner/openwrt"
         ls artifact/buildinfo/
+        echo "---------------------"
         ls artifact/package/
-        ls bin/targets/
+        echo "---------------------"
+        ls bin/targets/x86
+        echo "---------------------"
 
     - name: Create Release
       id: create_release
@@ -94,8 +101,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-Firmware-${{env.version_name}}.zip
-        asset_name: OpenWrt-Firmware-${{env.version_name}}.zip
+        asset_path: /home/runner/openwrt/OpenWrt-Firmware-SV-${{env.version_name}}.zip
+        asset_name: OpenWrt-Firmware-SV-${{env.version_name}}.zip
         asset_content_type: application/zip
 
     - name: Upload Package Asset
