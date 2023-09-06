@@ -74,7 +74,7 @@ jobs:
       - name: Check Build Info
         id: check_build_info
         run: |
-          echo ${{GITHUB_WORKSPACE}}
+          echo ${GITHUB_WORKSPACE}
           cd "/home/runner/openwrt"
           ls artifact/buildinfo/
           ls artifact/package/
