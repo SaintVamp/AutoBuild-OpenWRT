@@ -60,7 +60,7 @@ jobs:
         echo "---------------------"
         ls
         echo "---------------------"
-        zip -q -0 OpenWrt-Firmware-SV-${version_name}.zip ./bin/targets/
+        zip -q -0 OpenWrt-Firmware-SV-${version_name}.zip ./bin/targets/generic/
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
         cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
@@ -81,7 +81,7 @@ jobs:
         echo "---------------------"
         ls artifact/package/
         echo "---------------------"
-        ls bin/targets/x86
+        ls bin/targets/x86/generic/
         echo "---------------------"
 
     - name: Create Release
