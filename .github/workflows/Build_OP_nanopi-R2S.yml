@@ -97,8 +97,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/openwrt/OpenWrt-Firmware-${{env.version_name}}.zip
-          asset_name: OpenWrt-Firmware-${{env.version_name}}.zip
+          asset_path: /home/runner/openwrt/OpenWrt-Firmware-SV-${{env.version_name}}.zip
+          asset_name: OpenWrt-Firmware-SV-${{env.version_name}}.zip
           asset_content_type: application/zip
 
       - name: Upload Package Asset
