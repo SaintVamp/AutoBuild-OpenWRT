@@ -61,6 +61,9 @@ jobs:
           release_tag="${version_name}-$(date +%Y-%m-%d-%H-%M)"
           echo "release_tag=$release_tag" >> $GITHUB_ENV
           cd "/home/runner/openwrt"
+          echo "---------------------"
+          ls -lR /home/runner/openwrt/bin/
+          echo "---------------------"
           zip -q -0 OpenWrt-Firmware-SV-${version_name}.zip ./bin/targets/rockchip/armv8/*.img.gz
           mkdir -p ./artifact/package
           mkdir -p ./artifact/buildinfo
