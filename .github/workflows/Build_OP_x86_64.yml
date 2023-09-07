@@ -60,7 +60,7 @@ jobs:
         echo "release_tag=$release_tag" >> $GITHUB_ENV
         cd "/home/runner/openwrt"
         echo "---------------------"
-        ls /home/runner/openwrt/bin/targets/generic/
+        ls -lR /home/runner/openwrt/
         echo "---------------------"
         zip -q -0 OpenWrt-Firmware-SV-${version_name}.zip ./bin/targets/generic/
         mkdir -p ./artifact/package
@@ -70,8 +70,6 @@ jobs:
         cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
         zip -q -0 -r OpenWrt-Package-SV-${version_name}.zip ./artifact/package/
         zip -q -0 -r OpenWrt-BuildInfo-SV-${version_name}.zip ./artifact/buildinfo/
-        echo "---------------------"
-        ls /home/runner/openwrt/bin/targets/generic/
         echo "---------------------"
 
     - name: Check Build Info
