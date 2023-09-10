@@ -7,7 +7,7 @@ on:
     branches:
       - master
 env:
-  conf_name: x86_64.config
+  conf_name: x86_64-2.config
   BRANCH_NAME: openwrt-22.03
   version_name: x86_64
 jobs:
