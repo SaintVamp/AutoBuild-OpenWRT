@@ -37,6 +37,7 @@ jobs:
 
       - name: Server Benchmark
         run: |
+          whoami
           cd /home
           du -h --max-depth=0 *
           echo "-------------------"
