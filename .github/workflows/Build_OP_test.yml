@@ -38,7 +38,7 @@ jobs:
       - name: Server Benchmark
         run: |
           cd /
-          df -sh
+          df -h
 
       - name: Clone Source
         run: |
