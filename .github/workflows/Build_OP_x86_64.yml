@@ -7,7 +7,7 @@ on:
     branches:
       - master
 env:
-  conf_name: x86_64.config
+  conf_name: x86_64-4.config
   BRANCH_NAME: openwrt-22.03
   version_name: x86_64
 jobs:
@@ -59,17 +59,16 @@ jobs:
         release_tag="${version_name}-$(date +%Y-%m-%d-%H-%M)"
         echo "release_tag=$release_tag" >> $GITHUB_ENV
         cd "/home/runner/openwrt"
-        echo "---------------------"
-        ls -lR /home/runner/openwrt/bin/
-        echo "---------------------"
-        zip -q -0 OpenWrt-Firmware-SV-${version_name}.zip ./bin/targets/x86/generic/*.img.gz
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
+        mkdir -p ./artifact/firmware
+        cp -rf $(find ./bin/targets/ -type f -name "*.img.gz") ./artifact/firmware/
         cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
         cp -rf $(find ./bin/targets/ -type f -name "*.ipk") ./artifact/package/
         cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
         zip -q -0 -r OpenWrt-Package-SV-${version_name}.zip ./artifact/package/
         zip -q -0 -r OpenWrt-BuildInfo-SV-${version_name}.zip ./artifact/buildinfo/
+        zip -q -0 -r OpenWrt-Firmware-SV-${version_name}.zip ./artifact/firmware/
         echo "---------------------"
 
     - name: Check Build Info
