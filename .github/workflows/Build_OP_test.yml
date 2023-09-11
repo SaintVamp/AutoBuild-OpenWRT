@@ -71,9 +71,19 @@ jobs:
           echo "/opt"
           sudo du -h --max-depth=1
           echo "+++++++++++++++++++"
+          cd /opt/hostedtoolcache
+          ls -ls
+          echo "/opt/hostedtoolcache"
+          sudo du -h --max-depth=1
+          echo "+++++++++++++++++++"
           cd /usr
           ls -ls
           echo "/usr"
+          sudo du -h --max-depth=1
+          echo "-------------------"
+          cd /usr/local
+          ls -ls
+          echo "/usr/local"
           sudo du -h --max-depth=1
           echo "-------------------"
 
