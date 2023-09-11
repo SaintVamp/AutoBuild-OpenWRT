@@ -37,14 +37,19 @@ jobs:
 
       - name: Server Benchmark
         run: |
-          cd /
+          cd /home
           du -h --max-depth=0 *
+          echo "-------------------"
+          cd /imagegeneration
+          du -h --max-depth=0 *
+          echo "+++++++++++++++++++"
+          cd /mnt
+          du -h --max-depth=0 *
+          echo "-------------------"
+          cd /opt
+          du -h --max-depth=0 *
+          echo "+++++++++++++++++++"
+          cd /usr
+          du -h --max-depth=0 *
+          echo "-------------------"
 
-      - name: Clone Source
-        run: |
-          cd "/home/runner"
-          git clone --branch "${BRANCH_NAME}" --single-branch "https://github.com/SaintVamp/openwrt" "openwrt"
-          sudo chown -R runner:runner "openwrt"
-          cd "/home/runner/openwrt"
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
