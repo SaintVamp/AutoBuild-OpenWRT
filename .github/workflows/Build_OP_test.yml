@@ -38,31 +38,38 @@ jobs:
           ls -ls
           cd /home/linuxbrew
           ls -ls
-          sudo du -h --max-depth=0
+          echo "/home/linuxbrew"
+          sudo du -h --max-depth=1
           echo "-------------------"
           cd /home/runner
           ls -ls
-          sudo du -h --max-depth=0
+          echo "/home/runner"
+          sudo du -h --max-depth=1
           echo "-------------------"
           cd /home/runneradmin
           ls -ls
-          sudo du -h --max-depth=0
+          echo "/home/runneradmin"
+          sudo du -h --max-depth=1
           echo "-------------------"
           cd /imagegeneration
           ls -ls
-          sudo du -h --max-depth=0
+          echo "/imagegeneration"
+          sudo du -h --max-depth=1
           echo "+++++++++++++++++++"
           cd /mnt
           ls -ls
-          sudo du -h --max-depth=0
+          echo "/mnt"
+          sudo du -h --max-depth=1
           echo "-------------------"
           cd /opt
           ls -ls
-          sudo du -h --max-depth=0
+          echo "/opt"
+          sudo du -h --max-depth=1
           echo "+++++++++++++++++++"
           cd /usr
           ls -ls
-          sudo du -h --max-depth=0
+          echo "/usr"
+          sudo du -h --max-depth=1
           echo "-------------------"
 
 
