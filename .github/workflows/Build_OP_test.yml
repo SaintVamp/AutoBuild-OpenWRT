@@ -30,6 +30,7 @@ jobs:
           sudo -E apt-get clean -y
           sudo -E swapoff -a
           sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile /imagegeneration /mnt/swapfile /opt/hostedtoolcache /usr/local/.ghcup
+          ll /usr/local
 
       - name: Server Benchmark
         run: |
