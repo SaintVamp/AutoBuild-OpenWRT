@@ -36,6 +36,16 @@ jobs:
           whoami
           cd /home
           ls -las
+          cd /home/linuxbrew
+          ls -las
+          du -h --max-depth=0 *
+          echo "-------------------"
+          cd /home/runner
+          ls -las
+          du -h --max-depth=0 *
+          echo "-------------------"
+          cd /home/runneradmin
+          ls -las
           du -h --max-depth=0 *
           echo "-------------------"
           cd /imagegeneration
