@@ -29,18 +29,20 @@ jobs:
           sudo -E apt-get autoremove -y --purge
           sudo -E apt-get clean -y
           sudo -E swapoff -a
-          sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile
+          sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile /imagegeneration
 
       - name: Server Benchmark
         run: |
           whoami
+          ls -ls /
+          echo "--------1-----------"
           cd /home
           ls -ls
           cd /home/linuxbrew
           ls -ls
           echo "/home/linuxbrew"
           sudo du -h --max-depth=1
-          echo "-------------------"
+          echo "--------2-----------"
           cd /home/runner
           ls -ls
           echo "/home/runner"
@@ -51,16 +53,6 @@ jobs:
           echo "/home/runneradmin"
           sudo du -h --max-depth=1
           echo "-------------------"
-          cd /imagegeneration
-          ls -ls
-          echo "/imagegeneration"
-          sudo du -h --max-depth=1
-          echo "+++++++++++++++++++"
-          cd /imagegeneration/installers
-          ls -ls
-          echo "/imagegeneration/installers"
-          sudo du -h --max-depth=1
-          echo "+++++++++++++++++++"
           cd /mnt
           ls -ls
           echo "/mnt"
