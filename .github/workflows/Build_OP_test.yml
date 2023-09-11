@@ -56,9 +56,9 @@ jobs:
           echo "/imagegeneration"
           sudo du -h --max-depth=1
           echo "+++++++++++++++++++"
-          cd /imagegeneration/.installers
+          cd /imagegeneration/installers
           ls -ls
-          echo "/imagegeneration/.installers"
+          echo "/imagegeneration/installers"
           sudo du -h --max-depth=1
           echo "+++++++++++++++++++"
           cd /mnt
