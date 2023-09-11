@@ -38,31 +38,31 @@ jobs:
           ls -las
           cd /home/linuxbrew
           ls -las
-          du -h --max-depth=0 *
+          du -sh
           echo "-------------------"
           cd /home/runner
           ls -las
-          du -h --max-depth=0 *
+          du -sh
           echo "-------------------"
           cd /home/runneradmin
           ls -las
-          du -h --max-depth=0 *
+          du -sh
           echo "-------------------"
           cd /imagegeneration
           ls -las
-          du -h --max-depth=0 *
+          du -sh
           echo "+++++++++++++++++++"
           cd /mnt
           ls -las
-          du -h --max-depth=0 *
+          du -sh
           echo "-------------------"
           cd /opt
           ls -las
-          du -h --max-depth=0 *
+          du -sh
           echo "+++++++++++++++++++"
           cd /usr
           ls -las
-          du -h --max-depth=0 *
+          du -sh
           echo "-------------------"
 
 
