@@ -29,7 +29,7 @@ jobs:
           sudo -E apt-get autoremove -y --purge
           sudo -E apt-get clean -y
           sudo -E swapoff -a
-          sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile /imagegeneration /mnt/swapfile
+          sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile /imagegeneration /mnt/swapfile /opt/hostedtoolcache /usr/local/.ghcup
 
       - name: Server Benchmark
         run: |
@@ -58,19 +58,19 @@ jobs:
           echo "/opt"
           sudo du -h --max-depth=1
           echo "+++++++++6++++++++++"
-          cd /opt/hostedtoolcache
-          ls -ls
-          echo "/opt/hostedtoolcache"
-          sudo du -h --max-depth=1
-          echo "+++++++++7++++++++++"
           cd /usr
           ls -ls
           echo "/usr"
           sudo du -h --max-depth=1
           echo "---------8----------"
-          cd /usr/local
+          cd /usr/local/
           ls -ls
           echo "/usr/local"
+          sudo du -h --max-depth=1
+          echo "---------9----------"
+          cd /usr/share
+          ls -ls
+          echo "/usr/share"
           sudo du -h --max-depth=1
           echo "---------9----------"
 
