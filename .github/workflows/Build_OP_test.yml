@@ -35,33 +35,33 @@ jobs:
         run: |
           whoami
           cd /home
-          ls -las
+          ls -ls
           cd /home/linuxbrew
-          ls -las
+          ls -ls
           sudo du -h --max-depth=0 *
           echo "-------------------"
           cd /home/runner
-          ls -las
+          ls -ls
           sudo du -h --max-depth=0 *
           echo "-------------------"
           cd /home/runneradmin
-          ls -las
+          ls -ls
           sudo du -h --max-depth=0 *
           echo "-------------------"
           cd /imagegeneration
-          ls -las
+          ls -ls
           sudo du -h --max-depth=0 *
           echo "+++++++++++++++++++"
           cd /mnt
-          ls -las
+          ls -ls
           sudo du -h --max-depth=0 *
           echo "-------------------"
           cd /opt
-          ls -las
+          ls -ls
           sudo du -h --max-depth=0 *
           echo "+++++++++++++++++++"
           cd /usr
-          ls -las
+          ls -ls
           sudo du -h --max-depth=0 *
           echo "-------------------"
 
