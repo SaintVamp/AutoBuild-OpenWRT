@@ -33,10 +33,6 @@ jobs:
 
       - name: Server Benchmark
         run: |
-          wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
-
-      - name: Server Benchmark
-        run: |
           whoami
           cd /home
           du -h --max-depth=0 *
@@ -54,3 +50,7 @@ jobs:
           du -h --max-depth=0 *
           echo "-------------------"
 
+
+      - name: Server Benchmark
+        run: |
+          wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
