@@ -1,11 +1,11 @@
 name: OpenWrt_NanoPi_R2S
 on:
-  schedule:
-    - cron: "0 17 * * *"
+#  schedule:
+#    - cron: "0 17 * * *"
   workflow_dispatch:
-  push:
-    branches:
-      - master
+#  push:
+#    branches:
+#      - master
 env:
   conf_name: r2s-full.config
   BRANCH_NAME: openwrt-22.03
