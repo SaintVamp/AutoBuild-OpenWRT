@@ -69,6 +69,7 @@ jobs:
         zip -q -0 -r OpenWrt-Package-SV-${version_name}.zip ./artifact/package/
         zip -q -0 -r OpenWrt-BuildInfo-SV-${version_name}.zip ./artifact/buildinfo/
         zip -q -0 -r OpenWrt-Firmware-SV-${version_name}.zip ./artifact/firmware/
+        zip -q -0 -r OpenWrt-Download-SV-${version_name}.zip ./dl/
         echo "---------------------"
 
     - name: Check Build Info
@@ -122,5 +123,16 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: /home/runner/openwrt/OpenWrt-BuildInfo-SV-${{env.version_name}}.zip
         asset_name: OpenWrt-BuildInfo-SV-${{env.version_name}}.zip
+        asset_content_type: application/zip
+
+
+    - name: Upload BuildInfo Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: /home/runner/openwrt/OpenWrt-Download-SV-${{env.version_name}}.zip
+        asset_name: OpenWrt-Download-SV-${{env.version_name}}.zip
         asset_content_type: application/zip
 
