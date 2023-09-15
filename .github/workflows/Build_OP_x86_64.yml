@@ -59,8 +59,6 @@ jobs:
       run: |
         release_tag="${version_name}-$(date +%Y-%m-%d-%H-%M)"
         echo "release_tag=$release_tag" >> $GITHUB_ENV
-        cd "/home/runner"
-        zip -q -0 -r OpenWrt-SV-${version_name}.zip ./openwrt/
         cd "/home/runner/openwrt"
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
@@ -98,15 +96,6 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Upload Firmware Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/OpenWrt-SV-${{env.version_name}}.zip
-        asset_name: OpenWrt-SV-${{env.version_name}}.zip
-        asset_content_type: application/zip
 
     - name: Upload Firmware Asset
       uses: actions/upload-release-asset@v1
