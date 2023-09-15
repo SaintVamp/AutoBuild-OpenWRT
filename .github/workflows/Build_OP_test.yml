@@ -34,48 +34,19 @@ jobs:
 
       - name: Server Benchmark
         run: |
-          whoami
-          ls -ls /
-          echo "--------1-----------"
-          cd /home
-          ls -ls
-          cd /home/linuxbrew
-          ls -ls
-          echo "/home/linuxbrew"
-          sudo du -h --max-depth=1
-          echo "--------2-----------"
-          cd /home/runner
-          ls -ls
-          echo "/home/runner"
-          sudo du -h --max-depth=1
-          echo "---------3----------"
-          cd /home/runneradmin
-          ls -ls
-          echo "/home/runneradmin"
-          sudo du -h --max-depth=1
-          echo "---------4----------"
-          cd /opt
-          ls -ls
-          echo "/opt"
-          sudo du -h --max-depth=1
-          echo "+++++++++6++++++++++"
-          cd /usr
-          ls -ls
-          echo "/usr"
-          sudo du -h --max-depth=1
-          echo "---------8----------"
-          cd /usr/local/
-          ls -ls
-          echo "/usr/local"
-          sudo du -h --max-depth=1
-          echo "---------9----------"
-          cd /usr/share
-          ls -ls
-          echo "/usr/share"
-          sudo du -h --max-depth=1
-          echo "---------9----------"
-
-
-      - name: Server Benchmark
+          wget -qO- --no-check-certificate https://raw.githubusercontent.com/teddysun/across/master/bench.sh | bash
+      - name: Clone Source
         run: |
-          wget -qO- --no-check-certificate https://raw.githubusercontent.com/Kurokosama/serverbench/main/bench.sh | bash
+          cd "/home/runner"
+          git clone --branch "${BRANCH_NAME}" --single-branch "https://github.com/SaintVamp/openwrt" "openwrt"
+          sudo chown -R runner:runner "openwrt"
+
+
+      - name: Prepare Release Zip File
+        id: assemble_artifact
+        run: |
+          release_tag="${version_name}-$(date +%Y-%m-%d-%H-%M)"
+          echo "release_tag=$release_tag" >> $GITHUB_ENV
+          cd "/home/runner"
+          zip -q -0 -r OpenWrt-SV-${version_name}.zip ./openwrt/
+          ls -l /home/runner
