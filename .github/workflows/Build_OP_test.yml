@@ -6,8 +6,10 @@ on:
 #  push:
 #    branches:
 #      - master
+
 env:
   BRANCH_NAME: openwrt-22.03
+  version_name: x86_64
 
 jobs:
   build:
@@ -46,6 +48,7 @@ jobs:
         id: assemble_artifact
         run: |
           release_tag="${version_name}-$(date +%Y-%m-%d-%H-%M)"
+          echo $release_tag
           echo "release_tag=$release_tag" >> $GITHUB_ENV
           cd "/home/runner"
           zip -q -0 -r OpenWrt-SV-${version_name}.zip ./openwrt/

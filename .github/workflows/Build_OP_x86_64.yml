@@ -10,6 +10,7 @@ env:
   conf_name: x86_64-5.config
   BRANCH_NAME: openwrt-22.03
   version_name: x86_64
+
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -103,7 +104,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/OpenWrt-SV-${version_name}.zip
+        asset_path: /home/runner/OpenWrt-SV-${{version_name}}.zip
         asset_name: OpenWrt-SV-${{env.version_name}}.zip
         asset_content_type: application/zip
 
