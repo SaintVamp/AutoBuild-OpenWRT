@@ -61,7 +61,7 @@ jobs:
         release_tag="${version_name}-$(date +%Y-%m-%d-%H-%M)"
         echo "release_tag=$release_tag" >> $GITHUB_ENV
         ts="$(date +%Y%m%d-%H%M%S)"
-        echo "ts=ts" >> $GITHUB_ENV
+        echo "ts=$ts" >> $GITHUB_ENV
         cd "/home/runner/openwrt"
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
