@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - name: Checkout
+    - name: Checkout Repository
       uses: actions/checkout@v2
 
     - name: Init Building Dependencies
@@ -24,20 +24,21 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         docker rmi $(docker images -q)
-          sudo -E apt-get remove -y --purge azure-cli ghc zulu* hhvm llvm* firefox google* dotnet* powershell mysql* php* mssql-tools msodbcsql17 android*
-          sudo -E apt-get update -y
-          sudo -E apt-get full-upgrade -y
-          sudo -E apt-get install -y build-essential asciidoc binutils bzip2 coreutils gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-8 gcc++-8 gcc-8-multilib g++-8-multilib p7zip p7zip-full msmtp libssl-dev texinfo libreadline-dev libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint ccache curl wget vim nano python python3 python3-pip python-ply python3-ply haveged lrzsz device-tree-compiler scons antlr3 gperf ecj fastjar re2c xz-utils tar
-          for i in $(ls /usr/bin/*-8); do sudo -E ln -sf $i ${i%%-8*}; done
-          sudo -E ln -sf /usr/include/asm-generic /usr/include/asm
-          sudo -E apt-get autoremove -y --purge
-          sudo -E apt-get clean -y
-          sudo -E swapoff -a
-          sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile /imagegeneration /mnt/swapfile /opt/hostedtoolcache /usr/local/.ghcup
+        sudo -E apt-get remove -y --purge azure-cli ghc zulu* hhvm llvm* firefox google* dotnet* powershell mysql* php* mssql-tools msodbcsql17 android*
+        sudo -E apt-get update -y
+        sudo -E apt-get full-upgrade -y
+        sudo -E apt-get install -y build-essential asciidoc binutils bzip2 coreutils gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-8 gcc++-8 gcc-8-multilib g++-8-multilib p7zip p7zip-full msmtp libssl-dev texinfo libreadline-dev libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint ccache curl wget vim nano python python3 python3-pip python-ply python3-ply haveged lrzsz device-tree-compiler scons antlr3 gperf ecj fastjar re2c xz-utils tar
+        for i in $(ls /usr/bin/*-8); do sudo -E ln -sf $i ${i%%-8*}; done
+        sudo -E ln -sf /usr/include/asm-generic /usr/include/asm
+        sudo -E apt-get autoremove -y --purge
+        sudo -E apt-get clean -y
+        sudo -E swapoff -a
+        sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android /opt/ghc /swapfile /imagegeneration /mnt/swapfile /opt/hostedtoolcache /usr/local/.ghcup
 
     - name: Server Benchmark
       run: |
         wget -qO- --no-check-certificate https://raw.githubusercontent.com/teddysun/across/master/bench.sh | bash
+
     - name: Clone Source
       run: |
         cd "/home/runner"
@@ -59,6 +60,8 @@ jobs:
       run: |
         release_tag="${version_name}-$(date +%Y-%m-%d-%H-%M)"
         echo "release_tag=$release_tag" >> $GITHUB_ENV
+        ts="$(date +%Y%m%d-%H%M%S)"
+        echo "ts=ts" >> $GITHUB_ENV
         cd "/home/runner/openwrt"
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
@@ -67,10 +70,10 @@ jobs:
         cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
         cp -rf $(find ./bin/targets/ -type f -name "*.ipk") ./artifact/package/
         cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
-        zip -q -0 -r OpenWrt-Package-SV-${version_name}.zip ./artifact/package/
-        zip -q -0 -r OpenWrt-BuildInfo-SV-${version_name}.zip ./artifact/buildinfo/
-        zip -q -0 -r OpenWrt-Firmware-SV-${version_name}.zip ./artifact/firmware/
-        zip -q -0 -r OpenWrt-Download-SV-${version_name}.zip ./dl/
+        zip -q -0 -r OpenWrt-Package-SV-${version_name}-${ts}.zip ./artifact/package/
+        zip -q -0 -r OpenWrt-BuildInfo-SV-${version_name}-${ts}.zip ./artifact/buildinfo/
+        zip -q -0 -r OpenWrt-Firmware-SV-${version_name}-${ts}.zip ./artifact/firmware/
+        zip -q -0 -r OpenWrt-Download-SV-${version_name}-${ts}.zip ./dl/
         echo "---------------------"
 
     - name: Check Build Info
@@ -91,11 +94,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.release_tag }}
+        tag_name: ${{ env.version_name }}
         release_name: OpenWrt-${{ env.release_tag }}
         draft: false
         prerelease: false
-
 
     - name: Upload Firmware Asset
       uses: actions/upload-release-asset@v1
@@ -103,8 +105,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-Firmware-SV-${{env.version_name}}.zip
-        asset_name: OpenWrt-Firmware-SV-${{env.version_name}}.zip
+        asset_path: /home/runner/openwrt/OpenWrt-Firmware-SV-${{env.version_name}}-${{ env.ts }}.zip
+        asset_name: OpenWrt-Firmware-SV-${{env.version_name}}-${{ env.ts }}.zip
         asset_content_type: application/zip
 
     - name: Upload Package Asset
@@ -113,8 +115,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-Package-SV-${{env.version_name}}.zip
-        asset_name: OpenWrt-Package-SV-${{env.version_name}}.zip
+        asset_path: /home/runner/openwrt/OpenWrt-Package-SV-${{env.version_name}}-${{ env.ts }}.zip
+        asset_name: OpenWrt-Package-SV-${{env.version_name}}-${{ env.ts }}.zip
         asset_content_type: application/zip
 
     - name: Upload BuildInfo Asset
@@ -123,8 +125,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-BuildInfo-SV-${{env.version_name}}.zip
-        asset_name: OpenWrt-BuildInfo-SV-${{env.version_name}}.zip
+        asset_path: /home/runner/openwrt/OpenWrt-BuildInfo-SV-${{env.version_name}}-${{ env.ts }}.zip
+        asset_name: OpenWrt-BuildInfo-SV-${{env.version_name}}-${{ env.ts }}.zip
         asset_content_type: application/zip
 
 
@@ -134,7 +136,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-Download-SV-${{env.version_name}}.zip
-        asset_name: OpenWrt-Download-SV-${{env.version_name}}.zip
+        asset_path: /home/runner/openwrt/OpenWrt-Download-SV-${{env.version_name}}-${{ env.ts }}.zip
+        asset_name: OpenWrt-Download-SV-${{env.version_name}}-${{ env.ts }}.zip
         asset_content_type: application/zip
 
