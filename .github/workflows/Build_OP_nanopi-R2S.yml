@@ -37,7 +37,7 @@ jobs:
 
     - name: Server Benchmark
       run: |
-        wget -qO- --no-check-certificate https://raw.githubusercontent.com/teddysun/across/master/bench.sh | bash
+        wget -qO- --no-check-certificate https://raw.githubusercontent.com/SaintVamp/AutoBuild-OpenWRT/master/bench.sh | bash
 
     - name: Clone Source
       run: |
