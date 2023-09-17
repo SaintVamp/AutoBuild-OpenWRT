@@ -7,7 +7,7 @@ on:
     branches:
       - master
 env:
-  conf_name: r2s-full-2.config
+  conf_name: r2s-full.config
   BRANCH_NAME: openwrt-22.03
   version_name: r2s
 
@@ -70,7 +70,7 @@ jobs:
         cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
         zip -q -0 -r OpenWrt-Package-SV-${release_tag}.zip ./artifact/package/
         zip -q -0 -r OpenWrt-BuildInfo-SV-${release_tag}.zip ./artifact/buildinfo/
-        zip -q -0 -r OpenWrt-Firmware-SV-${release_tag}.zip ./artifact/firmware/
+        zip -q -0 -r OpenWrt-Firmware-SV-${release_tag}.zip ./bin/targets/
         zip -q -0 -r OpenWrt-Download-SV-${release_tag}.zip ./dl/
         echo "---------------------"
 
