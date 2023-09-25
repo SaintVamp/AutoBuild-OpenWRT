@@ -53,7 +53,7 @@ jobs:
         cd "/home/runner/openwrt"
         cp -f "${GITHUB_WORKSPACE}/configs/${conf_name}" ".config"
         make defconfig
-        make -j$[$(nproc)+1]
+        make -j$[$(nproc)+1] V=sc
 
     - name: Prepare Release Zip File
       id: assemble_artifact
