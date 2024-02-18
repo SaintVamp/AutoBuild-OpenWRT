@@ -76,9 +76,11 @@ jobs:
         cd "/home/runner/openwrt"
         ls -la /home/runner/openwrt
         echo "----------------"
-        ls -la /home/runner/openwrt/package
+        ls -Rla /home/runner/openwrt/package
         echo "----------------"
-        ls -la /home/runner/openwrt/target
+        ls -Rla /home/runner/openwrt/target
+        echo "----------------"
+        ls -Rla /home/runner/openwrt/bin
         echo "----------------"
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
