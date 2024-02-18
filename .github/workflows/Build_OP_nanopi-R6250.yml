@@ -1,4 +1,4 @@
-name: OpenWrt_NanoPi_R6250
+name: OpenWrt_NETGEAR_R6250
 on:
 #  schedule:
 #    - cron: "0 17 * * *"
@@ -74,7 +74,7 @@ jobs:
         release_tag="${version_name}-$(date +%s)"
         echo "release_tag=$release_tag" >> $GITHUB_ENV
         cd "/home/runner/openwrt"
-        ls -la ./artifact/
+        ls -la /home/runner/openwrt
         echo "----------------"
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
