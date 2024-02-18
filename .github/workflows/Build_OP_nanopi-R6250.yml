@@ -67,7 +67,7 @@ jobs:
         make -j$[$(nproc)+1] V=sc
 #        make -j1
 #        make -j1 V=sc
-        
+
     - name: Prepare Release Zip File
       id: assemble_artifact
       run: |
