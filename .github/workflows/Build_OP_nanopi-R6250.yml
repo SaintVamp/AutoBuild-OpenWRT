@@ -74,19 +74,8 @@ jobs:
         release_tag="${version_name}-$(date +%s)"
         echo "release_tag=$release_tag" >> $GITHUB_ENV
         cd "/home/runner/openwrt"
-        ls -la /home/runner/openwrt
-        echo "----------------"
-        ls -Rla /home/runner/openwrt/package
-        echo "----------------"
-        ls -Rla /home/runner/openwrt/target
-        echo "----------------"
-        ls -Rla /home/runner/openwrt/bin
-        echo "----------------"
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
-        mkdir -p ./artifact/firmware
-        cp -rf $(find ./bin/targets/ -type f -name "*.tar.gz") ./artifact/firmware/
-        cp -rf $(find ./bin/targets/ -type f -name "*.chk") ./artifact/firmware/
         cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
         cp -rf $(find ./bin/targets/ -type f -name "*.ipk") ./artifact/package/
         cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
