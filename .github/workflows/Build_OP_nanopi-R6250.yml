@@ -64,16 +64,18 @@ jobs:
         cd "/home/runner/openwrt"
         cp -f "${GITHUB_WORKSPACE}/configs/${conf_name}" ".config"
         make defconfig
-        make -j1
+        make -j$[$(nproc)+1] V=sc
+#        make -j1
 #        make -j1 V=sc
-#        make -j$[$(nproc)+1] V=sc
-
+        
     - name: Prepare Release Zip File
       id: assemble_artifact
       run: |
         release_tag="${version_name}-$(date +%s)"
         echo "release_tag=$release_tag" >> $GITHUB_ENV
         cd "/home/runner/openwrt"
+        ls -la ./artifact/
+        echo "----------------"
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
         mkdir -p ./artifact/firmware
