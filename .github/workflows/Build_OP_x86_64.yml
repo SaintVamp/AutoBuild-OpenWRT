@@ -96,7 +96,7 @@ jobs:
         echo "---------------------"
         ls artifact/package/
         echo "---------------------"
-        ls bin/targets/x86/generic/
+        ls bin/targets/
         echo "---------------------"
 
     - name: Create Release
