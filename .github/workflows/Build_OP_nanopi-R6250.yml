@@ -3,9 +3,9 @@ on:
 #  schedule:
 #    - cron: "0 17 * * *"
   workflow_dispatch:
-  push:
-    branches:
-      - master
+#  push:
+#    branches:
+#      - master
 env:
   conf_name: r6250.config
   BRANCH_NAME: openwrt-22.03
