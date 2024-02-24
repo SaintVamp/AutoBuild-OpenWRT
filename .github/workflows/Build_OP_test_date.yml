@@ -26,4 +26,4 @@ jobs:
         run: |
           docker rmi $(docker images -q)
           sudo timedatectl set-timezone Asia/Shanghai
-          date date +"%Y-%m-%d %H:%M:%S"
+          date +"%Y-%m-%d %H:%M:%S"
