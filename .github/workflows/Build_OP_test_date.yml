@@ -1,0 +1,29 @@
+name: OpenWrt_test
+on:
+#  schedule:
+#    - cron: "0 17 * * *"
+  workflow_dispatch:
+#  push:
+#    branches:
+#      - master
+
+env:
+  conf_name: r2s.config
+  BRANCH_NAME: openwrt-22.03-test
+  version_name: r2s
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Init Building Dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          docker rmi $(docker images -q)
+          sudo timedatectl set-timezone Asia/Shanghai
+          date date +"%Y-%m-%d %H:%M:%S"
