@@ -1,4 +1,4 @@
-name: OpenWrt_test_R2S
+name: OpenWrt_test_R2S-208
 on:
 #  schedule:
 #    - cron: "0 17 * * *"
@@ -9,7 +9,7 @@ on:
 
 env:
   conf_name: r2s.config
-  BRANCH_NAME: openwrt-22.03-test
+  BRANCH_NAME: openwrt-22.03-208
   version_name: r2s
 
 jobs:
@@ -24,6 +24,7 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
+          sudo timedatectl set-timezone Asia/Shanghai
           docker rmi $(docker images -q)
           echo "--------------------------0------------------------------------"
           sudo -E apt-get remove -y --purge azure-cli ghc zulu* hhvm llvm* firefox google* dotnet* powershell mysql* php* mssql-tools msodbcsql17 android*
