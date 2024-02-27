@@ -3,9 +3,9 @@ name: OpenWrt_x86_64
 on: 
   repository_dispatch:
   workflow_dispatch:
-#  push:
-#    branches:
-#      - master
+  push:
+    branches:
+      - master
 env:
   conf_name: x86.config
   BRANCH_NAME: openwrt-22.03
