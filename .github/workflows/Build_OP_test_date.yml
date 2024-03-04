@@ -65,7 +65,7 @@ jobs:
           cd "/home/runner/openwrt"
           cp -f "${GITHUB_WORKSPACE}/configs/${conf_name}" ".config"
           make defconfig
-          make -j1
+          make -j1 V=sc
       #        make -j$[$(nproc)+1] V=sc
       #        make -j1 V=sc
 
