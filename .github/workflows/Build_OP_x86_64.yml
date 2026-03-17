@@ -26,7 +26,7 @@ jobs:
         sudo timedatectl set-timezone Asia/Shanghai
         docker rmi $(docker images -q)
         echo "--------------------------0------------------------------------"
-        sudo -E apt-get remove -y --purge azure-cli ghc zulu* hhvm llvm* firefox google* dotnet* powershell mysql* php* mssql-tools msodbcsql17 android*
+        sudo -E apt-get remove -y --purge azure-cli ghc zulu* hhvm llvm* firefox google* dotnet* powershell mysql* php* mssql-tools msodbcsql17 android* || true
         echo "--------------------------1------------------------------------"
         sudo -E apt-get update -y
         echo "--------------------------2------------------------------------"
