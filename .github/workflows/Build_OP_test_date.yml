@@ -77,15 +77,41 @@ jobs:
           cd "/home/runner/openwrt"
           mkdir -p ./artifact/package
           mkdir -p ./artifact/buildinfo
-          mkdir -p ./artifact/firmware
-          cp -rf $(find ./bin/targets/ -type f -name "*.img.gz") ./artifact/firmware/
-          cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
-          cp -rf $(find ./bin/targets/ -type f -name "*.ipk") ./artifact/package/
+          
+          # 定义要打包的特定 LuCI 应用列表
+          LUCI_APPS="luci-app-firewall luci-app-wol luci-app-socat luci-app-cpu luci-app-aliddns"
+          
+          # 打包指定的 LuCI 应用
+          for app in $LUCI_APPS; do
+            echo "Finding and copying ${app}..."
+            find ./bin/packages/ -type f -name "${app}*.ipk" -exec cp {} ./artifact/package/ \;
+            find ./bin/targets/ -type f -name "${app}*.ipk" -exec cp {} ./artifact/package/ \;
+          done
+          
+          # 打包 LuCI 核心组件（必需依赖）
+          echo "Copying LuCI core components..."
+          find ./bin/packages/ -type f \( -name "luci-base*.ipk" -o -name "luci-compat*.ipk" -o -name "luci-mod-admin-full*.ipk" -o -name "luci-mod-network*.ipk" -o -name "luci-mod-status*.ipk" -o -name "luci-mod-system*.ipk" \) -exec cp {} ./artifact/package/ \;
+          find ./bin/targets/ -type f \( -name "luci-base*.ipk" -o -name "luci-compat*.ipk" -o -name "luci-mod-admin-full*.ipk" -o -name "luci-mod-network*.ipk" -o -name "luci-mod-status*.ipk" -o -name "luci-mod-system*.ipk" \) -exec cp {} ./artifact/package/ \;
+          
+          # 打包 LuCI 库依赖
+          find ./bin/packages/ -type f \( -name "luci-lib-base*.ipk" -o -name "luci-lib-ip*.ipk" -o -name "luci-lib-jsonc*.ipk" -o -name "luci-lib-nixio*.ipk" \) -exec cp {} ./artifact/package/ \;
+          find ./bin/targets/ -type f \( -name "luci-lib-base*.ipk" -o -name "luci-lib-ip*.ipk" -o -name "luci-lib-jsonc*.ipk" -o -name "luci-lib-nixio*.ipk" \) -exec cp {} ./artifact/package/ \;
+          
+          # 打包中文语言包
+          echo "Copying Chinese language packs..."
+          find ./bin/packages/ -type f -name "luci-i18n-*zh-cn*.ipk" -exec cp {} ./artifact/package/ \;
+          find ./bin/targets/ -type f -name "luci-i18n-*zh-cn*.ipk" -exec cp {} ./artifact/package/ \;
+          
+          # 打包构建信息
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+          
+          # 只创建 package 压缩包
           zip -q -0 -r OpenWrt-Package-SV-${release_tag}.zip ./artifact/package/
           zip -q -0 -r OpenWrt-BuildInfo-SV-${release_tag}.zip ./artifact/buildinfo/
-          zip -q -0 -r OpenWrt-Firmware-SV-${release_tag}.zip ./bin/targets/
-          zip -q -0 -r OpenWrt-Download-SV-${release_tag}.zip ./dl/
+          
+          echo "=== Package Summary ==="
+          echo "Total packages: $(ls artifact/package/ | wc -l)"
+          ls -lh artifact/package/
           echo "---------------------"
 
       - name: Check Build Info
@@ -93,11 +119,14 @@ jobs:
         run: |
           echo ${GITHUB_WORKSPACE}
           cd "/home/runner/openwrt"
-          ls artifact/buildinfo/
+          echo "=== Build Info Files ==="
+          ls -lh artifact/buildinfo/
           echo "---------------------"
+          echo "=== Package Files ==="
           ls artifact/package/
           echo "---------------------"
-          ls bin/targets/
+          echo "=== Total Package Count ==="
+          ls artifact/package/ | wc -l
           echo "---------------------"
 
       - name: Create Release
@@ -107,19 +136,24 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.release_tag }}
-          release_name: OpenWrt-${{ env.release_tag }}
+          release_name: OpenWrt-LuciApps-${{ env.release_tag }}
           draft: false
           prerelease: false
-
-      - name: Upload Firmware Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/openwrt/OpenWrt-Firmware-SV-${{env.release_tag}}.zip
-          asset_name: OpenWrt-Firmware-SV-${{env.release_tag}}.zip
-          asset_content_type: application/zip
+          body: |
+            ## LuCI 应用包
+            仅包含精选的 LuCI 应用程序，不包含固件和内核。
+            
+            ### 包含的应用：
+            - luci-app-firewall (防火墙)
+            - luci-app-wol (网络唤醒)
+            - luci-app-socat (端口转发)
+            - luci-app-cpu (CPU 状态监控)
+            - luci-app-aliddns (阿里 DDNS)
+            
+            ### 安装说明：
+            1. 下载 OpenWrt-Package-SV-*.zip
+            2. 解压后上传到 OpenWrt 路由器
+            3. 使用 opkg install *.ipk 安装
 
       - name: Upload Package Asset
         uses: actions/upload-release-asset@v1
@@ -139,16 +173,5 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: /home/runner/openwrt/OpenWrt-BuildInfo-SV-${{env.release_tag}}.zip
           asset_name: OpenWrt-BuildInfo-SV-${{env.release_tag}}.zip
-          asset_content_type: application/zip
-
-
-      - name: Upload BuildInfo Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/openwrt/OpenWrt-Download-SV-${{env.release_tag}}.zip
-          asset_name: OpenWrt-Download-SV-${{env.release_tag}}.zip
           asset_content_type: application/zip
 
