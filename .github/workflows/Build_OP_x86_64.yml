@@ -1,4 +1,4 @@
-name: OpenWrt_x86_64
+name: SV-Wrt_x86_64
 
 on: 
   repository_dispatch:
@@ -8,7 +8,7 @@ on:
       - master
 env:
   conf_name: x86.config
-  BRANCH_NAME: openwrt-22.03
+  BRANCH_NAME: openwrt-25.12
   version_name: x86_64
 
 jobs:
@@ -17,14 +17,14 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Init Building Dependencies
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
         sudo timedatectl set-timezone Asia/Shanghai
-        docker rmi $(docker images -q)
+        docker rmi $(docker images -q) || true
         echo "--------------------------0------------------------------------"
         sudo -E apt-get remove -y --purge azure-cli ghc zulu* hhvm llvm* firefox google* dotnet* powershell mysql* php* mssql-tools msodbcsql17 android* || true
         echo "--------------------------1------------------------------------"
@@ -32,7 +32,7 @@ jobs:
         echo "--------------------------2------------------------------------"
         echo "sudo -E apt-get full-upgrade -y"
         echo "--------------------------3------------------------------------"
-        sudo -E apt-get install -y build-essential asciidoc binutils bzip2 coreutils gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc-s1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-9 gcc++-9 gcc-9-multilib g++-9-multilib p7zip p7zip-full msmtp libssl-dev texinfo libreadline-dev libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint ccache curl wget vim nano python3 python3-pip python3-ply haveged lrzsz device-tree-compiler scons antlr3 gperf ecj fastjar re2c xz-utils tar
+        sudo -E apt-get install -y build-essential asciidoc binutils bzip2 coreutils gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc-s1 libc6-dev-i386 subversion flex uglifyjs git-core p7zip p7zip-full msmtp libssl-dev texinfo libreadline-dev libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint ccache curl wget vim nano python3 python3-pip python3-ply haveged lrzsz device-tree-compiler scons antlr3 gperf ecj fastjar re2c xz-utils tar
         echo "--------------------------4------------------------------------"
         for i in $(ls /usr/bin/*-8); do sudo -E ln -sf $i ${i%%-8*}; done
         echo "--------------------------5------------------------------------"
@@ -60,12 +60,50 @@ jobs:
         ./scripts/feeds update -a
         ./scripts/feeds install -a
 
-    - name: Build OpenWrt
+    - name: Copy Config File
       run: |
         cd "/home/runner/openwrt"
         cp -f "${GITHUB_WORKSPACE}/configs/${conf_name}" ".config"
+
+    # ----- 新增：生成缓存 key（基于配置文件内容、分支名和运行环境）-----
+    - name: Generate cache key
+      id: cache_key
+      run: |
+        cd "/home/runner/openwrt"
+        CONFIG_HASH=$(sha256sum .config | awk '{print $1}')
+        echo "key=openwrt-build-${{ runner.os }}-${{ env.BRANCH_NAME }}-${CONFIG_HASH}" >> $GITHUB_OUTPUT
+
+    # ----- 新增：缓存关键目录 -----
+    - name: Cache dl, build_dir, staging_dir and ccache
+      uses: actions/cache@v4
+      id: cache
+      with:
+        path: |
+          /home/runner/openwrt/dl
+          /home/runner/openwrt/build_dir
+          /home/runner/openwrt/staging_dir
+          /home/runner/openwrt/.ccache
+        key: ${{ steps.cache_key.outputs.key }}
+        restore-keys: |
+          openwrt-build-${{ runner.os }}-${{ env.BRANCH_NAME }}-
+          openwrt-build-${{ runner.os }}-
+
+    # ----- 新增：启用 ccache（若配置文件中未开启，可手动添加）-----
+    - name: Enable ccache
+      run: |
+        cd "/home/runner/openwrt"
+        # 如果 .config 中还没有启用 ccache，则追加一行
+        if ! grep -q "CONFIG_CCACHE=y" .config; then
+          echo "CONFIG_CCACHE=y" >> .config
+        fi
+        # 设置 ccache 缓存目录环境变量（供后续 make 使用）
+        echo "CCACHE_DIR=/home/runner/openwrt/.ccache" >> $GITHUB_ENV
+
+    - name: Build SV-Wrt
+      run: |
+        cd "/home/runner/openwrt"
         make defconfig
-        make -j1
+        make -j$[$(nproc)+1]
 #        make -j$[$(nproc)+1] V=sc
 #        make -j1 V=sc
 
@@ -78,14 +116,14 @@ jobs:
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
         mkdir -p ./artifact/firmware
-        cp -rf $(find ./bin/targets/ -type f -name "*.img.gz") ./artifact/firmware/
-        cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
-        cp -rf $(find ./bin/targets/ -type f -name "*.ipk") ./artifact/package/
-        cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
-        zip -q -0 -r OpenWrt-Package-SV-${release_tag}.zip ./artifact/package/
-        zip -q -0 -r OpenWrt-BuildInfo-SV-${release_tag}.zip ./artifact/buildinfo/
-        zip -q -0 -r OpenWrt-Firmware-SV-${release_tag}.zip ./artifact/firmware/
-        zip -q -0 -r OpenWrt-Download-SV-${release_tag}.zip ./dl/
+        cp -rf $(find ./bin/targets/ -type f -name "*.img.gz") ./artifact/firmware/ || true
+        cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/ || true
+        cp -rf $(find ./bin/targets/ -type f -name "*.ipk") ./artifact/package/ || true
+        cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/ || true
+        zip -q -0 -r SV-Wrt-Package-SV-${release_tag}.zip ./artifact/package/ || true
+        zip -q -0 -r SV-Wrt-BuildInfo-SV-${release_tag}.zip ./artifact/buildinfo/ || true
+        zip -q -0 -r SV-Wrt-Firmware-SV-${release_tag}.zip ./artifact/firmware/ || true
+        zip -q -0 -r SV-Wrt-Download-SV-${release_tag}.zip ./dl/ || true
         echo "---------------------"
 
     - name: Check Build Info
@@ -100,55 +138,17 @@ jobs:
         ls bin/targets/
         echo "---------------------"
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create Release and Upload Assets
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ env.release_tag }}
-        release_name: OpenWrt-${{ env.release_tag }}
+        name: SV-Wrt-${{ env.release_tag }}
         draft: false
         prerelease: false
-
-    - name: Upload Firmware Asset
-      uses: actions/upload-release-asset@v1
+        files: |
+          /home/runner/openwrt/SV-Wrt-Firmware-SV-${{ env.release_tag }}.zip
+          /home/runner/openwrt/SV-Wrt-Package-SV-${{ env.release_tag }}.zip
+          /home/runner/openwrt/SV-Wrt-BuildInfo-SV-${{ env.release_tag }}.zip
+          /home/runner/openwrt/SV-Wrt-Download-SV-${{ env.release_tag }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-Firmware-SV-${{env.release_tag}}.zip
-        asset_name: OpenWrt-Firmware-SV-${{env.release_tag}}.zip
-        asset_content_type: application/zip
-
-    - name: Upload Package Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-Package-SV-${{env.release_tag}}.zip
-        asset_name: OpenWrt-Package-SV-${{env.release_tag}}.zip
-        asset_content_type: application/zip
-
-    - name: Upload BuildInfo Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-BuildInfo-SV-${{env.release_tag}}.zip
-        asset_name: OpenWrt-BuildInfo-SV-${{env.release_tag}}.zip
-        asset_content_type: application/zip
-
-
-    - name: Upload BuildInfo Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/openwrt/OpenWrt-Download-SV-${{env.release_tag}}.zip
-        asset_name: OpenWrt-Download-SV-${{env.release_tag}}.zip
-        asset_content_type: application/zip
-
