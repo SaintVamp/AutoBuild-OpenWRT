@@ -5,12 +5,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - x86
 env:
   conf_name: x86.config
   BRANCH_NAME: openwrt-25.12
   version_name: x86_64
-  USE_CACHE: true
+  USE_CACHE: false
 
 jobs:
   build:
