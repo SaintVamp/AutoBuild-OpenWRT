@@ -103,7 +103,7 @@ jobs:
       run: |
         cd "/home/runner/openwrt"
         make defconfig
-        make -j$[$(nproc)+1]
+        make -j1 V=sc
 #        make -j$[$(nproc)+1] V=sc
 #        make -j1 V=sc
 
