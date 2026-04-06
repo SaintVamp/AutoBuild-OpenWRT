@@ -10,6 +10,7 @@ env:
   conf_name: x86.config
   BRANCH_NAME: openwrt-25.12
   version_name: x86_64
+  USE_CACHE: true
 
 jobs:
   build:
@@ -65,16 +66,18 @@ jobs:
         cd "/home/runner/openwrt"
         cp -f "${GITHUB_WORKSPACE}/configs/${conf_name}" ".config"
 
-    # ----- 新增：生成缓存 key（基于配置文件内容、分支名和运行环境）-----
+    # ----- 新增：生成缓存 key(基于配置文件内容、分支名和运行环境)-----
     - name: Generate cache key
+      if: env.USE_CACHE == 'true'
       id: cache_key
       run: |
         cd "/home/runner/openwrt"
         CONFIG_HASH=$(sha256sum .config | awk '{print $1}')
         echo "key=openwrt-build-${{ runner.os }}-${{ env.BRANCH_NAME }}-${CONFIG_HASH}" >> $GITHUB_OUTPUT
-
-    # ----- 新增：缓存关键目录 -----
+    
+    # ----- 新增:缓存关键目录 -----
     - name: Cache dl, build_dir, staging_dir and ccache
+      if: env.USE_CACHE == 'true'
       uses: actions/cache@v4
       id: cache
       with:
@@ -88,15 +91,16 @@ jobs:
           openwrt-build-${{ runner.os }}-${{ env.BRANCH_NAME }}-
           openwrt-build-${{ runner.os }}-
 
-    # ----- 新增：启用 ccache（若配置文件中未开启，可手动添加）-----
+    # ----- 新增:启用 ccache(若配置文件中未开启,可手动添加)-----
     - name: Enable ccache
+      if: env.USE_CACHE == 'true'
       run: |
         cd "/home/runner/openwrt"
-        # 如果 .config 中还没有启用 ccache，则追加一行
+        # 如果 .config 中还没有启用 ccache,则追加一行
         if ! grep -q "CONFIG_CCACHE=y" .config; then
           echo "CONFIG_CCACHE=y" >> .config
         fi
-        # 设置 ccache 缓存目录环境变量（供后续 make 使用）
+        # 设置 ccache 缓存目录环境变量(供后续 make 使用)
         echo "CCACHE_DIR=/home/runner/openwrt/.ccache" >> $GITHUB_ENV
 
     - name: Build SV-Wrt
