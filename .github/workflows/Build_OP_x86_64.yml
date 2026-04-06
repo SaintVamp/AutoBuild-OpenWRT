@@ -54,7 +54,7 @@ jobs:
     - name: Clone Source
       run: |
         cd "/home/runner"
-        git clone --branch "${BRANCH_NAME}" --single-branch "https://github.com/SaintVamp/openwrt" "openwrt"
+        git clone --branch "${BRANCH_NAME}" --single-branch "https://github.com/SVGROUP/openwrt" "openwrt"
         sudo chown -R runner:runner "openwrt"
         cd "/home/runner/openwrt"
         ./scripts/feeds update -a
